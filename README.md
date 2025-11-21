@@ -1,1 +1,1 @@
-# beadando-javaea
+# beadando-javaea ez egy readme
