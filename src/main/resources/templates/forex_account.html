@@ -4,18 +4,15 @@
     <title>Forex Account Info</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+    <noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
 </head>
 <body class="is-preload">
 <div id="page-wrapper">
 
     <header id="header">
         <div class="inner">
-
-            <h1><a href="/" id="logo">Magyar Fiktív Bank</a></h1>
-
+            <h1 id="logo"><a th:href="@{/}">Magyar Fiktív Bank</a></h1>
             <nav id="nav">
                 <ul>
                     <li><a th:href="@{/}">Főoldal</a></li>
@@ -23,7 +20,6 @@
                     <li class="current_page_item"><a th:href="@{/forex-account}">Forex Fiók</a></li>
                 </ul>
             </nav>
-
         </div>
     </header>
 
@@ -110,12 +106,12 @@
 
 </div>
 
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.dropotron.min.js"></script>
-<script src="assets/js/browser.min.js"></script>
-<script src="assets/js/breakpoints.min.js"></script>
-<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js"></script>
+<script th:src="@{/assets/js/jquery.min.js}"></script>
+<script th:src="@{/assets/js/jquery.dropotron.min.js}"></script>
+<script th:src="@{/assets/js/browser.min.js}"></script>
+<script th:src="@{/assets/js/breakpoints.min.js}"></script>
+<script th:src="@{/assets/js/util.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
 
 </body>
 </html>
