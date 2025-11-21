@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Forex Account Info</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+<div id="page-wrapper">
+
+    <header id="header">
+        <h1 id="logo"><a href="/">Java Beadandó</a></h1>
+        <nav id="nav">
+            <ul>
+                <li><a href="/">Főoldal</a></li>
+                <li><a href="/mnb">MNB Árfolyam</a></li>
+                <li class="current"><a href="/forex-account">Forex Fiók</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="main" class="wrapper style1">
+        <div class="container">
+            <header class="major">
+                <h2>Forex Számlainformációk</h2>
+                <p>Az OANDA demó számla aktuális állapota</p>
+            </header>
+
+            <section>
+                <div th:if="${error}" class="box" style="border-color: red; color: red;">
+                    <p th:text="${error}"></p>
+                </div>
+
+                <div th:if="${summary}" class="table-wrapper">
+                    <table class="alt">
+                        <thead>
+                        <tr>
+                            <th>Tulajdonság</th>
+                            <th>Érték</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Számla ID</td>
+                            <td th:text="${summary.id}"></td>
+                        </tr>
+                        <tr>
+                            <td>Név (Alias)</td>
+                            <td th:text="${summary.alias}"></td>
+                        </tr>
+                        <tr>
+                            <td>Devizanem</td>
+                            <td th:text="${summary.currency}"></td>
+                        </tr>
+                        <tr>
+                            <td>Egyenleg (Balance)</td>
+                            <td th:text="${summary.balance}"></td>
+                        </tr>
+                        <tr>
+                            <td>Nettó eszközérték (NAV)</td>
+                            <td th:text="${summary.nav}"></td>
+                        </tr>
+                        <tr>
+                            <td>Nyitott pozíciók száma</td>
+                            <td th:text="${summary.openPositionCount}"></td>
+                        </tr>
+                        <tr>
+                            <td>Nem realizált P/L</td>
+                            <td th:text="${summary.unrealizedPL}"
+                                th:style="${summary.unrealizedPL.toString().startsWith('-') ? 'color:red' : 'color:green'}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Felhasznált Margin</td>
+                            <td th:text="${summary.marginUsed}"></td>
+                        </tr>
+                        <tr>
+                            <td>Elérhető Margin</td>
+                            <td th:text="${summary.marginAvailable}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <ul class="actions">
+                    <li><a href="/" class="button">Vissza a főoldalra</a></li>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <ul class="copyright">
+            <li>&copy; Minden jog fenntartva.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+    </footer>
+
+</div>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.dropotron.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
