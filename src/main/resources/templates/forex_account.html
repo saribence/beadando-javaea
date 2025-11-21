@@ -5,21 +5,26 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-    <link rel="stylesheet" href="/assets/css/main.css" />
-    <noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 </head>
 <body class="is-preload">
 <div id="page-wrapper">
 
     <header id="header">
-        <h1 id="logo"><a href="/">Java Beadandó</a></h1>
-        <nav id="nav">
-            <ul>
-                <li><a href="/">Főoldal</a></li>
-                <li><a href="/mnb">MNB Árfolyam</a></li>
-                <li class="current"><a href="/forex-account">Forex Fiók</a></li>
-            </ul>
-        </nav>
+        <div class="inner">
+
+            <h1><a href="/" id="logo">Magyar Fiktív Bank</a></h1>
+
+            <nav id="nav">
+                <ul>
+                    <li><a th:href="@{/}">Főoldal</a></li>
+                    <li><a th:href="@{/mnb}">SOAP (MNB)</a></li>
+                    <li class="current_page_item"><a th:href="@{/forex-account}">Forex Fiók</a></li>
+                </ul>
+            </nav>
+
+        </div>
     </header>
 
     <div id="main" class="wrapper style1">
@@ -91,7 +96,7 @@
                 </div>
 
                 <ul class="actions">
-                    <li><a href="/" class="button primary">Vissza a főoldalra</a></li>
+                    <li><a th:href="@{/}" class="button primary">Vissza a főoldalra</a></li>
                 </ul>
             </section>
         </div>
@@ -105,12 +110,12 @@
 
 </div>
 
-<script src="/assets/js/jquery.min.js"></script>
-<script src="/assets/js/jquery.dropotron.min.js"></script>
-<script src="/assets/js/browser.min.js"></script>
-<script src="/assets/js/breakpoints.min.js"></script>
-<script src="/assets/js/util.js"></script>
-<script src="/assets/js/main.js"></script>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.dropotron.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
 
 </body>
 </html>
