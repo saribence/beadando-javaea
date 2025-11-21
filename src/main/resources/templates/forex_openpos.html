@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Forex Historikus Árak</title>
+    <title>Forex Pozíció Nyitás</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
@@ -19,8 +19,8 @@
                     <li><a th:href="@{/mnb}">SOAP (MNB)</a></li>
                     <li><a th:href="@{/forex-account}">Forex Fiók</a></li>
                     <li><a th:href="@{/forex-actpr}">Forex AktÁr</a></li>
-                    <li class="current_page_item"><a th:href="@{/forex-histpr}">Forex HistÁr</a></li>
-                    <li><a th:href="@{/forex-openpos}">Forex Nyit</a></li>
+                    <li><a th:href="@{/forex-histpr}">Forex HistÁr</a></li>
+                    <li class="current_page_item"><a th:href="@{/forex-openpos}">Forex Nyit</a></li>
                 </ul>
             </nav>
         </div>
@@ -29,13 +29,14 @@
     <div id="main" class="wrapper style1">
         <div class="container">
             <header class="major">
-                <h2>Historikus Árak Lekérdezése</h2>
-                <p>Válasszon devizapárt és időszakot (Granularity) a listából!</p>
+                <h2>Új Pozíció Nyitása</h2>
+                <p>Piaci áras (Market) megbízás küldése</p>
             </header>
 
             <section>
-                <form action="#" th:action="@{/forex-histpr}" th:object="${messageHistPrice}" method="post">
+                <form action="#" th:action="@{/forex-openpos}" th:object="${messageOpenPosition}" method="post">
                     <div class="row gtr-uniform gtr-50">
+
                         <div class="col-6 col-12-xsmall">
                             <label for="instrument">Instrumentum</label>
                             <select name="instrument" th:field="*{instrument}" id="instrument">
@@ -46,21 +47,16 @@
                                 <option value="EUR_HUF">EUR/HUF</option>
                             </select>
                         </div>
+
                         <div class="col-6 col-12-xsmall">
-                            <label for="granularity">Időszak (Granularity)</label>
-                            <select name="granularity" th:field="*{granularity}" id="granularity">
-                                <option value="S5">5 másodperc (S5)</option>
-                                <option value="M1">1 perc (M1)</option>
-                                <option value="M15">15 perc (M15)</option>
-                                <option value="H1">1 óra (H1)</option>
-                                <option value="D">1 nap (D)</option>
-                                <option value="W">1 hét (W)</option>
-                                <option value="M">1 hónap (M)</option>
-                            </select>
+                            <label for="units">Mennyiség (Units)</label>
+                            <input type="number" name="units" id="units" th:field="*{units}" placeholder="Pl. 10 (Long) vagy -10 (Short)" required />
+                            <p style="font-size: 0.8em; color: #666;">Pozitív szám = Vétel (Long), Negatív szám = Eladás (Short)</p>
                         </div>
+
                         <div class="col-12">
                             <ul class="actions">
-                                <li><input type="submit" value="Lekérdezés" class="primary" /></li>
+                                <li><input type="submit" value="Pozíció Nyitása" class="primary" /></li>
                             </ul>
                         </div>
                     </div>
@@ -68,30 +64,15 @@
 
                 <hr />
 
-                <div th:if="${candles}">
-                    <h3>Utolsó 10 árfolyam: <span th:text="${selectedInstrument}"></span> (<span th:text="${selectedGranularity}"></span>)</h3>
-                    <div class="table-wrapper">
-                        <table class="alt">
-                            <thead>
-                            <tr>
-                                <th>Időpont</th>
-                                <th>Nyitó (Open)</th>
-                                <th>Maximum (High)</th>
-                                <th>Minimum (Low)</th>
-                                <th>Záró (Close)</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="candle : ${candles}">
-                                <td th:text="${candle.time}"></td>
-                                <td th:text="${candle.mid.o}"></td>
-                                <td th:text="${candle.mid.h}"></td>
-                                <td th:text="${candle.mid.l}"></td>
-                                <td th:text="${candle.mid.c}" style="font-weight: bold;"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div th:if="${tradeId}" class="box" style="border-color: green; background-color: #e6fffa;">
+                    <h3>Sikeres Tranzakció!</h3>
+                    <ul class="alt">
+                        <li><strong>Tranzakció ID (Trade ID):</strong> <span th:text="${tradeId}"></span></li>
+                        <li><strong>Instrumentum:</strong> <span th:text="${openedInstrument}"></span></li>
+                        <li><strong>Mennyiség:</strong> <span th:text="${openedUnits}"></span></li>
+                        <li><strong>Nyitó Ár:</strong> <span th:text="${openedPrice}"></span></li>
+                    </ul>
+                    <a th:href="@{/forex-account}" class="button small">Számlaegyenleg megtekintése</a>
                 </div>
 
                 <div th:if="${error}" class="box" style="border-color: red; color: red; background-color: #ffe6e6; padding: 1em;">
