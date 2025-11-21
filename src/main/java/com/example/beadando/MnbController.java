@@ -30,9 +30,18 @@ public class MnbController {
             @RequestParam("endDate") String endDate,
             @RequestParam("currency") String currency,
             Model model) {
+
+
         List<ExchangeRate> rates = mnbService.getRates(startDate, endDate, currency);
+
         model.addAttribute("rates", rates);
         model.addAttribute("selectedCurrency", currency);
+
+
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+        // ------------------------------------------------------------------
+
         List<String> dates = rates.stream().map(ExchangeRate::getDate).collect(Collectors.toList());
         List<Double> values = rates.stream().map(ExchangeRate::getValue).collect(Collectors.toList());
         model.addAttribute("chartDates", dates);
