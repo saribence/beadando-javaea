@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Forex Aktuális Ár</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+    <noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
+</head>
+<body class="is-preload">
+<div id="page-wrapper">
+
+    <header id="header">
+        <div class="inner">
+
+            <h1><a href="/" id="logo">Magyar Fiktív Bank</a></h1>
+
+            <nav id="nav">
+                <ul>
+                    <li><a th:href="@{/}">Főoldal</a></li>
+                    <li><a th:href="@{/mnb}">SOAP (MNB)</a></li>
+                    <li><a th:href="@{/forex-account}">Forex Fiók</a></li>
+                    <li class="current_page_item"><a th:href="@{/forex-actpr}">Forex AktÁr</a></li>
+                </ul>
+            </nav>
+
+        </div>
+    </header>
+
+    <div id="main" class="wrapper style1">
+        <div class="container">
+            <header class="major">
+                <h2>Aktuális Árfolyam Lekérdezése</h2>
+                <p>Válasszon devizapárt a listából!</p>
+            </header>
+
+            <section>
+                <form action="#" th:action="@{/forex-actpr}" th:object="${messageActPrice}" method="post">
+                    <div class="row gtr-uniform gtr-50">
+                        <div class="col-12">
+                            <select name="instrument" th:field="*{instrument}" id="instrument">
+                                <option value="EUR_USD">EUR/USD</option>
+                                <option value="USD_CHF">USD/CHF</option>
+                                <option value="GBP_USD">GBP/USD</option>
+                                <option value="USD_JPY">USD/JPY</option>
+                                <option value="EUR_HUF">EUR/HUF</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <ul class="actions">
+                                <li><input type="submit" value="Lekérdezés" class="primary" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+
+                <hr />
+
+                <div th:if="${prices}">
+                    <h3>Eredmény: <span th:text="${selectedInstrument}"></span></h3>
+                    <div class="table-wrapper">
+                        <table class="alt">
+                            <thead>
+                            <tr>
+                                <th>Típus</th>
+                                <th>Időpont</th>
+                                <th>Vételi ár (Bid)</th>
+                                <th>Eladási ár (Ask)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="price : ${prices}">
+                                <td th:text="${price.type}"></td>
+                                <td th:text="${price.time}"></td>
+                                <td th:text="${price.bids[0].price}"></td>
+                                <td th:text="${price.asks[0].price}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div th:if="${error}" class="box" style="border-color: red; color: red; background-color: #ffe6e6;">
+                    <p th:text="${error}"></p>
+                </div>
+
+            </section>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <ul class="copyright">
+            <li>&copy; Minden jog fenntartva.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+    </footer>
+
+</div>
+
+<script th:src="@{/assets/js/jquery.min.js}"></script>
+<script th:src="@{/assets/js/jquery.dropotron.min.js}"></script>
+<script th:src="@{/assets/js/browser.min.js}"></script>
+<script th:src="@{/assets/js/breakpoints.min.js}"></script>
+<script th:src="@{/assets/js/util.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+
+</body>
+</html>
