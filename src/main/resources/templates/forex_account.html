@@ -4,8 +4,9 @@
     <title>Forex Account Info</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+    <link rel="stylesheet" href="/assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
 </head>
 <body class="is-preload">
 <div id="page-wrapper">
@@ -25,11 +26,12 @@
         <div class="container">
             <header class="major">
                 <h2>Forex Számlainformációk</h2>
-                <p>Az OANDA demó számla aktuális állapota</p>
+                <p>Az OANDA számla aktuális egyenlege és állapota</p>
             </header>
 
             <section>
-                <div th:if="${error}" class="box" style="border-color: red; color: red;">
+                <div th:if="${error}" class="box" style="border-color: red; color: red; background-color: #ffe6e6; padding: 1em;">
+                    <h3>Hiba történt!</h3>
                     <p th:text="${error}"></p>
                 </div>
 
@@ -37,55 +39,59 @@
                     <table class="alt">
                         <thead>
                         <tr>
-                            <th>Tulajdonság</th>
+                            <th>Megnevezés</th>
                             <th>Érték</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>Számla ID</td>
+                            <td><strong>Számla Azonosító (ID)</strong></td>
                             <td th:text="${summary.id}"></td>
                         </tr>
                         <tr>
-                            <td>Név (Alias)</td>
+                            <td><strong>Számla Neve</strong></td>
                             <td th:text="${summary.alias}"></td>
                         </tr>
                         <tr>
-                            <td>Devizanem</td>
+                            <td><strong>Devizanem</strong></td>
                             <td th:text="${summary.currency}"></td>
                         </tr>
                         <tr>
-                            <td>Egyenleg (Balance)</td>
+                            <td><strong>Egyenleg (Balance)</strong></td>
                             <td th:text="${summary.balance}"></td>
                         </tr>
                         <tr>
-                            <td>Nettó eszközérték (NAV)</td>
-                            <td th:text="${summary.nav}"></td>
+                            <td><strong>Nettó Eszközérték (NAV)</strong></td>
+                            <td th:text="${summary.NAV}" style="font-weight: bold;"></td>
                         </tr>
                         <tr>
-                            <td>Nyitott pozíciók száma</td>
-                            <td th:text="${summary.openPositionCount}"></td>
-                        </tr>
-                        <tr>
-                            <td>Nem realizált P/L</td>
-                            <td th:text="${summary.unrealizedPL}"
-                                th:style="${summary.unrealizedPL.toString().startsWith('-') ? 'color:red' : 'color:green'}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Felhasznált Margin</td>
+                            <td><strong>Felhasznált Margin</strong></td>
                             <td th:text="${summary.marginUsed}"></td>
                         </tr>
                         <tr>
-                            <td>Elérhető Margin</td>
+                            <td><strong>Elérhető Margin</strong></td>
                             <td th:text="${summary.marginAvailable}"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nem realizált Nyereség/Veszteség</strong></td>
+                            <td th:text="${summary.unrealizedPL}"
+                                th:style="${summary.unrealizedPL.toString().startsWith('-') ? 'color:red; font-weight:bold;' : 'color:green; font-weight:bold;'}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nyitott Pozíciók</strong></td>
+                            <td th:text="${summary.openPositionCount}"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nyitott Kereskedések</strong></td>
+                            <td th:text="${summary.openTradeCount}"></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <ul class="actions">
-                    <li><a href="/" class="button">Vissza a főoldalra</a></li>
+                    <li><a href="/" class="button primary">Vissza a főoldalra</a></li>
                 </ul>
             </section>
         </div>
@@ -99,11 +105,12 @@
 
 </div>
 
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.dropotron.min.js"></script>
-<script src="assets/js/browser.min.js"></script>
-<script src="assets/js/breakpoints.min.js"></script>
-<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js"></script>
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/jquery.dropotron.min.js"></script>
+<script src="/assets/js/browser.min.js"></script>
+<script src="/assets/js/breakpoints.min.js"></script>
+<script src="/assets/js/util.js"></script>
+<script src="/assets/js/main.js"></script>
+
 </body>
 </html>
