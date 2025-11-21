@@ -2,9 +2,13 @@ package com.example.beadando;
 
 import com.oanda.v20.Context;
 import com.oanda.v20.account.AccountSummary;
+import com.oanda.v20.instrument.CandlestickGranularity;
+import com.oanda.v20.instrument.InstrumentCandlesRequest;
+import com.oanda.v20.instrument.InstrumentCandlesResponse;
 import com.oanda.v20.pricing.PricingGetRequest;
 import com.oanda.v20.pricing.PricingGetResponse;
 import com.oanda.v20.pricing.ClientPrice;
+import com.oanda.v20.primitives.InstrumentName;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,5 +74,36 @@ public class ForexController {
             model.addAttribute("error", "Hiba az árfolyam lekérésekor: " + e.getMessage());
         }
         return "forex_actpr";
+    }
+    @GetMapping("/forex-histpr")
+    public String histPriceForm(Model model) {
+        // Üres objektum küldése az űrlapnak
+        model.addAttribute("messageHistPrice", new MessageHistPrice());
+        return "forex_histpr";
+    }
+
+    @PostMapping("/forex-histpr")
+    public String histPriceSubmit(@ModelAttribute MessageHistPrice messageHistPrice, Model model) {
+        try {
+            Context ctx = new Context(Config.URL, Config.TOKEN);
+
+            // Kérés összeállítása: Instrumentum neve + Granularity + utolsó 10 adat
+            InstrumentCandlesRequest request = new InstrumentCandlesRequest(new InstrumentName(messageHistPrice.getInstrument()));
+            request.setGranularity(CandlestickGranularity.valueOf(messageHistPrice.getGranularity()));
+            request.setCount(10L); // 10 adat kérése
+
+            // Lekérés végrehajtása
+            InstrumentCandlesResponse resp = ctx.instrument.candles(request);
+
+            // Eredmények átadása a nézetnek
+            model.addAttribute("candles", resp.getCandles());
+            model.addAttribute("selectedInstrument", messageHistPrice.getInstrument());
+            model.addAttribute("selectedGranularity", messageHistPrice.getGranularity());
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Hiba a historikus adatok lekérésekor: " + e.getMessage());
+        }
+        return "forex_histpr";
     }
 }
