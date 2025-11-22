@@ -1,111 +1,131 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>MNB Árfolyamlekérdező</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+    <noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { background-color: #f4f6f9; }
-        /* Navigáció stílusa a bootstrap oldalon */
-        .navbar-custom { background-color: #143a25; }
-        .navbar-custom .nav-link { color: rgba(255,255,255,0.8); }
-        .navbar-custom .nav-link:hover, .navbar-custom .nav-link.active { color: #d4af37; }
-
-        .bank-header { background-color: #1c4e33; color: white; padding: 20px; margin-bottom: 30px; border-bottom: 5px solid #d4af37; }
-        .bank-card { border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 3px solid #1c4e33; }
-        .btn-bank { background-color: #1c4e33; color: white; }
-        .btn-bank:hover { background-color: #143a25; color: white; }
-        .logo-text { font-family: 'Georgia', serif; font-weight: bold; font-size: 1.5rem; }
-    </style>
 </head>
-<body>
+<body class="is-preload">
+<div id="page-wrapper">
 
-<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-    <div class="container">
-        <a class="navbar-brand" href="/">Magyar Fiktív Bank</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/}">Főoldal</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/mnb}">SOAP (MNB)</a>
-                </li>
-            </ul>
+    <header id="header">
+        <div class="inner">
+            <h1 id="logo"><a th:href="@{/}">Magyar Fiktív Bank</a></h1>
+            <nav id="nav">
+                <ul>
+                    <li><a th:href="@{/}">Főoldal</a></li>
+                    <li class="current_page_item"><a th:href="@{/mnb}">SOAP (MNB)</a></li>
+                    <li><a th:href="@{/forex-account}">Forex Fiók</a></li>
+                    <li><a th:href="@{/forex-actpr}">Forex AktÁr</a></li>
+                    <li><a th:href="@{/forex-histpr}">Forex HistÁr</a></li>
+                    <li><a th:href="@{/forex-openpos}">Forex Nyit</a></li>
+                    <li><a th:href="@{/forex-positions}">Forex-Poz</a></li>
+                    <li><a th:href="@{/forex-closepos}">Forex Zár</a></li>
+                </ul>
+            </nav>
         </div>
-    </div>
-</nav>
+    </header>
 
-<div class="container-fluid bank-header">
-    <div class="container d-flex justify-content-between align-items-center">
-        <div class="logo-text">🏦 Magyar Fiktív Bank Zrt.</div>
-        <div>Hivatalos Árfolyamközvetítő Portál</div>
-    </div>
-</div>
+    <div id="main" class="wrapper style1">
+        <div class="container">
+            <header class="major">
+                <h2>MNB Árfolyamlekérdező</h2>
+                <p>Hivatalos középárfolyamok letöltése és grafikonos megjelenítése.</p>
+            </header>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card bank-card p-4 mb-4">
-                <h4 class="mb-3">Lekérdezés</h4>
+            <section>
+                <h3>Lekérdezés beállításai</h3>
                 <form action="/mnb" method="post">
-                    <div class="mb-3">
-                        <label class="form-label">Deviza</label>
-                        <select name="currency" class="form-select">
-                            <option value="EUR" th:selected="${selectedCurrency == 'EUR'}">EUR - Euró</option>
-                            <option value="USD" th:selected="${selectedCurrency == 'USD'}">USD - Amerikai Dollár</option>
-                            <option value="GBP" th:selected="${selectedCurrency == 'GBP'}">GBP - Angol Font</option>
-                            <option value="CHF" th:selected="${selectedCurrency == 'CHF'}">CHF - Svájci Frank</option>
-                        </select>
+                    <div class="row gtr-uniform gtr-50">
+                        <div class="col-4 col-12-xsmall">
+                            <label for="currency">Deviza</label>
+                            <select name="currency" id="currency">
+                                <option value="EUR" th:selected="${selectedCurrency == 'EUR'}">EUR - Euró</option>
+                                <option value="USD" th:selected="${selectedCurrency == 'USD'}">USD - Amerikai Dollár</option>
+                                <option value="GBP" th:selected="${selectedCurrency == 'GBP'}">GBP - Angol Font</option>
+                                <option value="CHF" th:selected="${selectedCurrency == 'CHF'}">CHF - Svájci Frank</option>
+                            </select>
+                        </div>
+
+                        <div class="col-4 col-12-xsmall">
+                            <label for="startDate">Kezdő dátum</label>
+                            <input type="date" name="startDate" id="startDate" th:value="${startDate}" required />
+                        </div>
+
+                        <div class="col-4 col-12-xsmall">
+                            <label for="endDate">Befejező dátum</label>
+                            <input type="date" name="endDate" id="endDate" th:value="${endDate}" required />
+                        </div>
+
+                        <div class="col-12">
+                            <ul class="actions">
+                                <li><input type="submit" value="Árfolyamok lekérése" class="button primary" /></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Kezdő dátum</label>
-                        <input type="date" name="startDate" class="form-control" th:value="${startDate}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Befejező dátum</label>
-                        <input type="date" name="endDate" class="form-control" th:value="${endDate}" required>
-                    </div>
-                    <button type="submit" class="btn btn-bank w-100">Árfolyamok lekérése</button>
                 </form>
-            </div>
+            </section>
 
-            <div class="card bank-card p-3" th:if="${not #lists.isEmpty(rates)}">
-                <h5>Adatok listája</h5>
-                <table class="table table-striped table-sm">
-                    <thead>
-                    <tr>
-                        <th>Dátum</th>
-                        <th>Árfolyam (HUF)</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="rate : ${rates}">
-                        <td th:text="${rate.date}">2023-01-01</td>
-                        <td th:text="${rate.value}">380.5</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            <hr />
 
-        <div class="col-md-8">
-            <div class="card bank-card p-4">
-                <h4 class="mb-3">Árfolyam Grafikon</h4>
-                <div th:if="${#lists.isEmpty(rates)}" class="alert alert-info">
-                    Kérem válasszon devizát és időszakot a grafikon megjelenítéséhez!
+            <section th:if="${not #lists.isEmpty(rates)}">
+                <div class="row">
+                    <div class="col-4 col-12-medium">
+                        <h3>Adatok listája</h3>
+                        <div class="table-wrapper">
+                            <table class="alt">
+                                <thead>
+                                <tr>
+                                    <th>Dátum</th>
+                                    <th>Árfolyam (HUF)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="rate : ${rates}">
+                                    <td th:text="${rate.date}">2023-01-01</td>
+                                    <td th:text="${rate.value}">380.5</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-8 col-12-medium">
+                        <h3>Árfolyam Grafikon</h3>
+                        <div class="box">
+                            <canvas id="mnbChart"></canvas>
+                        </div>
+                    </div>
                 </div>
-                <canvas id="mnbChart" th:if="${not #lists.isEmpty(rates)}"></canvas>
-            </div>
+            </section>
+
+            <section th:if="${#lists.isEmpty(rates)}">
+                <div class="box">
+                    <p>Kérem válasszon devizát és időszakot a megjelenítéshez! (Hétvégén és ünnepnapokon nincs árfolyamjegyzés.)</p>
+                </div>
+            </section>
+
         </div>
     </div>
+
+    <footer id="footer">
+        <ul class="copyright">
+            <li>&copy; Magyar Fiktív Bank Zrt. Minden jog fenntartva.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+    </footer>
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/assets/js/jquery.min.js}"></script>
+<script th:src="@{/assets/js/jquery.dropotron.min.js}"></script>
+<script th:src="@{/assets/js/browser.min.js}"></script>
+<script th:src="@{/assets/js/breakpoints.min.js}"></script>
+<script th:src="@{/assets/js/util.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+
 <script th:inline="javascript">
     /*<![CDATA[*/
     var dates = /*[[${chartDates}]]*/ [];
@@ -114,6 +134,13 @@
 
     if(dates && dates.length > 0) {
         const ctx = document.getElementById('mnbChart').getContext('2d');
+
+        // Ha már létezik a chart, töröljük a régit (hogy ne vibráljon újrarajzoláskor)
+        let chartStatus = Chart.getChart("mnbChart");
+        if (chartStatus != undefined) {
+            chartStatus.destroy();
+        }
+
         new Chart(ctx, {
             type: 'line',
             data: {
@@ -121,9 +148,10 @@
                 datasets: [{
                     label: currency + ' árfolyam (HUF)',
                     data: values,
-                    borderColor: '#1c4e33',
-                    backgroundColor: 'rgba(28, 78, 51, 0.1)',
+                    borderColor: '#d4af37', // A bank arany színe
+                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
                     borderWidth: 2,
+                    pointRadius: 3,
                     fill: true,
                     tension: 0.1
                 }]
@@ -131,7 +159,13 @@
             options: {
                 responsive: true,
                 scales: {
-                    y: { beginAtZero: false }
+                    y: {
+                        beginAtZero: false,
+                        grid: { color: '#eee' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
                 }
             }
         });

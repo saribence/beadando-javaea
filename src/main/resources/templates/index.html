@@ -5,6 +5,29 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+
+    <style>
+        /* Mobilon ne nyúljon bele, csak asztali nézetben */
+        @media screen and (min-width: 980px) {
+            /* A logó ne törjön sorba */
+            #logo {
+                white-space: nowrap;
+                font-size: 1.8em; /* Kicsit kisebb logó */
+                margin-right: 10px;
+            }
+
+            /* A menüpontok legyenek közelebb egymáshoz és kisebb betűvel */
+            #nav > ul > li {
+                margin-left: 0.5em; /* Kisebb távolság a gombok közt */
+            }
+
+            #nav > ul > li > a {
+                padding: 0.5em 0.8em; /* Kisebb belső keret a gomboknak */
+                font-size: 0.8em;     /* Kisebb betűméret */
+                letter-spacing: 0;    /* Betűközök normálra vétele */
+            }
+        }
+    </style>
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
@@ -14,22 +37,18 @@
 
             <header id="header">
                 <div class="inner">
-
-                    <h1><a href="/" id="logo">Magyar Fiktív Bank</a></h1>
-
-                    <nav id="nav">
+                        <nav id="nav">
                         <ul>
-                            <li class="current_page_item"><a th:href="@{/}">Főoldal</a></li>
-                            <li><a th:href="@{/mnb}">SOAP (MNB)</a></li>
-                            <li><a th:href="@{/forex-account}">Forex Fiók</a></li>
-                            <li><a th:href="@{/forex-actpr}">Forex AktÁr</a></li>
-                            <li><a th:href="@{/forex-histpr}">Forex HistÁr</a></li>
-                            <li><a th:href="@{/forex-openpos}">Forex Nyit</a></li>
-                            <li><a th:href="@{/forex-positions}">Forex-Poz</a></li>
-                            <li><a th:href="@{/forex-closepos}">Forex Zár</a></li>
-                        </ul>
-                    </nav>
-
+                                <li class="current_page_item"><a th:href="@{/}">Főoldal</a></li>
+                                <li><a th:href="@{/mnb}">SOAP menü</a></li>
+                                <li><a th:href="@{/forex-account}">Forex-account</a></li>
+                                <li><a th:href="@{/forex-actpr}">Forex-AktÁr</a></li>
+                                <li><a th:href="@{/forex-histpr}">Forex-HistÁr</a></li>
+                                <li><a th:href="@{/forex-openpos}">Forex-Nyit</a></li>
+                                <li><a th:href="@{/forex-positions}">Forex-Poz</a></li>
+                                <li><a th:href="@{/forex-closepos}">Forex-Zár</a></li>
+                            </ul>
+                        </nav>
                 </div>
             </header>
 
@@ -91,7 +110,7 @@
 
             </div>
         </div>
-        
+
         <div class="wrapper style3">
             <div class="inner">
                 <div class="container">
