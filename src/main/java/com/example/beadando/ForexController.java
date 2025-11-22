@@ -12,6 +12,9 @@ import com.oanda.v20.order.OrderCreateResponse;
 import com.oanda.v20.pricing.PricingGetRequest;
 import com.oanda.v20.pricing.PricingGetResponse;
 import com.oanda.v20.primitives.InstrumentName;
+import com.oanda.v20.trade.TradeCloseRequest;
+import com.oanda.v20.trade.TradeSpecifier;
+import com.oanda.v20.trade.TradeCloseResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,7 +72,7 @@ public class ForexController {
         return "forex_actpr";
     }
 
-    // --- 3. FELADAT: HISTORIKUS ÁRAK LEKÉRDEZÉSE ---
+
     @GetMapping("/forex-histpr")
     public String histPriceForm(Model model) {
         model.addAttribute("messageHistPrice", new MessageHistPrice());
@@ -100,7 +103,6 @@ public class ForexController {
     // --- 4. FELADAT: POZÍCIÓ NYITÁS ---
     @GetMapping("/forex-openpos")
     public String openPositionForm(Model model) {
-        // Üres űrlap objektum létrehozása
         model.addAttribute("messageOpenPosition", new MessageOpenPosition());
         return "forex_openpos";
     }
@@ -109,23 +111,14 @@ public class ForexController {
     public String openPositionSubmit(@ModelAttribute MessageOpenPosition messageOpenPosition, Model model) {
         try {
             Context ctx = new Context(Config.URL, Config.TOKEN);
-
-            // 1. Fő kérés objektum (Melyik számlára?)
             OrderCreateRequest request = new OrderCreateRequest(Config.ACCOUNTID);
-
-            // 2. Részletes megbízás objektum (Mit és mennyit?)
             MarketOrderRequest marketOrderRequest = new MarketOrderRequest();
             marketOrderRequest.setInstrument(new InstrumentName(messageOpenPosition.getInstrument()));
             marketOrderRequest.setUnits(messageOpenPosition.getUnits());
-
-            // 3. Megbízás csatolása a kéréshez
             request.setOrder(marketOrderRequest);
 
-            // 4. Kérés elküldése az OANDA-nak
             OrderCreateResponse response = ctx.order.create(request);
 
-            // 5. Eredmény (Trade ID) kinyerése és megjelenítése
-            // A response.getOrderFillTransaction() tartalmazza a sikeres tranzakció adatait
             if (response.getOrderFillTransaction() != null) {
                 String tradeId = response.getOrderFillTransaction().getId().toString();
                 String price = response.getOrderFillTransaction().getPrice().toString();
@@ -134,8 +127,7 @@ public class ForexController {
                 model.addAttribute("openedInstrument", messageOpenPosition.getInstrument());
                 model.addAttribute("openedUnits", messageOpenPosition.getUnits());
             } else {
-                // Ha nincs Fill tranzakció, akkor valamiért nem teljesült azonnal (pl. Pending) vagy hiba volt
-                model.addAttribute("error", "A megbízás elküldve, de nem teljesült azonnal (lehet, hogy várakozó).");
+                model.addAttribute("error", "A megbízás elküldve, de nem teljesült azonnal.");
             }
 
         } catch (Throwable e) {
@@ -144,25 +136,58 @@ public class ForexController {
         }
         return "forex_openpos";
     }
-    @GetMapping("/forex_openpos")
-    public String openPositions(Model model) {
-        // 1. Kapcsolódás
-        Context ctx = new Context(Config.URL, Config.TOKEN);
 
+
+    // --- 5. FELADAT: NYITOTT POZÍCIÓK LISTÁZÁSA (Forex-Poz) ---
+    @GetMapping("/forex-positions")
+    public String listOpenPositions(Model model) {
         try {
-            // 2. Nyitott pozíciók lekérése a számláról
+            Context ctx = new Context(Config.URL, Config.TOKEN);
+
             List<Trade> trades = ctx.trade.listOpen(Config.ACCOUNTID).getTrades();
-
-            // 3. Adatok átadása a te meglévő HTML oldaladnak
-            // FONTOS: A te HTML-edben a th:each="${trades}" vagy hasonló néven várja az adatot!
             model.addAttribute("trades", trades);
-
-        } catch (Exception e) {
+        } catch (Throwable e) { // Exception helyett Throwable, hogy mindent elkapjon
             e.printStackTrace();
+            model.addAttribute("error", "Hiba a pozíciók lekérésekor: " + e.getMessage());
         }
 
-        // 4. A te meglévő fájlod neve (kiterjesztés nélkül)
-        return "forex_openpos";
+        // FONTOS: Ennek a névnek PONTOSAN egyeznie kell a HTML fájl nevével (kiterjesztés nélkül)!
+        return "forex_positions";
+    }
+    // --- 6. FELADAT: POZÍCIÓ ZÁRÁS ---
+    @GetMapping("/forex-closepos")
+    public String closePositionForm(Model model) {
+        model.addAttribute("messageClosePosition", new MessageClosePosition());
+        return "forex_closepos";
+    }
 
+    @PostMapping("/forex-closepos")
+    public String closePositionSubmit(@ModelAttribute MessageClosePosition messageClosePosition, Model model) {
+        try {
+            Context ctx = new Context(Config.URL, Config.TOKEN);
+
+
+            String tradeIdToClose = messageClosePosition.getTradeId();
+
+
+            TradeCloseRequest request = new TradeCloseRequest(Config.ACCOUNTID, new TradeSpecifier(tradeIdToClose));
+
+
+            TradeCloseResponse response = ctx.trade.close(request);
+
+
+            if (response.getOrderFillTransaction() != null) {
+                model.addAttribute("closedTradeId", response.getOrderFillTransaction().getId());
+                model.addAttribute("closedPrice", response.getOrderFillTransaction().getPrice());
+                model.addAttribute("profit", response.getOrderFillTransaction().getPl());
+            } else {
+                model.addAttribute("error", "A pozíciót nem sikerült azonnal lezárni (vagy már le van zárva).");
+            }
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Hiba a pozíció zárásakor: " + e.getMessage());
+        }
+        return "forex_closepos";
     }
 }

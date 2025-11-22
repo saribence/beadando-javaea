@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Forex Pozíció Zárás</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+    <noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
+</head>
+<body class="is-preload">
+<div id="page-wrapper">
+
+    <header id="header">
+        <div class="inner">
+            <h1 id="logo"><a th:href="@{/}">Magyar Fiktív Bank</a></h1>
+            <nav id="nav">
+                <ul>
+                    <li><a th:href="@{/}">Főoldal</a></li>
+                    <li><a th:href="@{/mnb}">SOAP (MNB)</a></li>
+                    <li><a th:href="@{/forex-account}">Forex Fiók</a></li>
+                    <li><a th:href="@{/forex-actpr}">Forex AktÁr</a></li>
+                    <li><a th:href="@{/forex-histpr}">Forex HistÁr</a></li>
+                    <li><a th:href="@{/forex-openpos}">Forex Nyit</a></li>
+                    <li><a th:href="@{/forex-positions}">Forex-Poz</a></li>
+                    <li class="current_page_item"><a th:href="@{/forex-closepos}">Forex Zár</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div id="main" class="wrapper style1">
+        <div class="container">
+            <header class="major">
+                <h2>Pozíció Zárása</h2>
+                <p>Adja meg a lezárni kívánt tranzakció azonosítóját (Trade ID).</p>
+            </header>
+
+            <section>
+                <form action="#" th:action="@{/forex-closepos}" th:object="${messageClosePosition}" method="post">
+                    <div class="row gtr-uniform gtr-50">
+                        <div class="col-6 col-12-xsmall">
+                            <label for="tradeId">Trade ID</label>
+                            <input type="text" name="tradeId" id="tradeId" th:field="*{tradeId}" placeholder="Pl. 105" required />
+                            <p style="font-size: 0.8em; color: #666;">A Trade ID-t a 'Forex-Poz' menüpontban találja meg.</p>
+                        </div>
+                        <div class="col-12">
+                            <ul class="actions">
+                                <li><input type="submit" value="Pozíció Zárása" class="primary" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+
+                <hr />
+
+                <div th:if="${closedTradeId}" class="box" style="border-color: green; background-color: #e6fffa;">
+                    <h3>Sikeres Zárás!</h3>
+                    <ul class="alt">
+                        <li><strong>Lezárt Trade ID:</strong> <span th:text="${closedTradeId}"></span></li>
+                        <li><strong>Záró Ár:</strong> <span th:text="${closedPrice}"></span></li>
+                        <li><strong>Realizált Eredmény (Profit/Loss):</strong>
+                            <span th:text="${profit}" th:style="${profit.doubleValue() >= 0} ? 'color:green; font-weight:bold;' : 'color:red; font-weight:bold;'"></span>
+                        </li>
+                    </ul>
+                    <a th:href="@{/forex-positions}" class="button small">Nyitott pozíciók ellenőrzése</a>
+                </div>
+
+                <div th:if="${error}" class="box" style="border-color: red; color: red; background-color: #ffe6e6; padding: 1em;">
+                    <h3>Hiba történt!</h3>
+                    <p th:text="${error}"></p>
+                </div>
+
+            </section>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <ul class="copyright">
+            <li>&copy; Minden jog fenntartva.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+    </footer>
+
+</div>
+
+<script th:src="@{/assets/js/jquery.min.js}"></script>
+<script th:src="@{/assets/js/jquery.dropotron.min.js}"></script>
+<script th:src="@{/assets/js/browser.min.js}"></script>
+<script th:src="@{/assets/js/breakpoints.min.js}"></script>
+<script th:src="@{/assets/js/util.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+
+</body>
+</html>

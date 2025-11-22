@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Forex Nyitott Pozíciók</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+    <noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
+</head>
+<body class="is-preload">
+<div id="page-wrapper">
+
+    <header id="header">
+        <div class="inner">
+            <h1 id="logo"><a th:href="@{/}">Magyar Fiktív Bank</a></h1>
+            <nav id="nav">
+                <ul>
+                    <li><a th:href="@{/}">Főoldal</a></li>
+                    <li><a th:href="@{/mnb}">SOAP (MNB)</a></li>
+                    <li><a th:href="@{/forex-account}">Forex Fiók</a></li>
+                    <li><a th:href="@{/forex-actpr}">Forex AktÁr</a></li>
+                    <li><a th:href="@{/forex-histpr}">Forex HistÁr</a></li>
+                    <li><a th:href="@{/forex-openpos}">Forex Nyit</a></li>
+                    <li class="current_page_item"><a th:href="@{/forex-positions}">Forex-Poz</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div id="main" class="wrapper style1">
+        <div class="container">
+            <header class="major">
+                <h2>Nyitott Pozíciók</h2>
+                <p>Aktuális kereskedési pozíciók listája</p>
+            </header>
+
+            <section>
+                <div th:if="${error}" class="box" style="border-color: red; color: red; background-color: #ffe6e6;">
+                    <p th:text="${error}"></p>
+                </div>
+
+                <div class="table-wrapper">
+                    <table th:if="${not #lists.isEmpty(trades)}" class="alt">
+                        <thead>
+                        <tr>
+                            <th>Trade ID</th>
+                            <th>Instrumentum</th>
+                            <th>Mennyiség</th>
+                            <th>Nyitó Ár</th>
+                            <th>Jelenlegi Ár</th>
+                            <th>Lebegő Eredmény (P/L)</th>
+                            <th>Nyitás Ideje</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="trade : ${trades}">
+                            <td th:text="${trade.id}"></td>
+                            <td th:text="${trade.instrument}"></td>
+                            <td th:text="${trade.currentUnits}"></td>
+                            <td th:text="${trade.price}"></td>
+                            <td th:text="${trade.price}"></td>
+                            <td th:text="${trade.unrealizedPL}"
+                                th:style="${trade.unrealizedPL.doubleValue() >= 0} ? 'color:green; font-weight:bold;' : 'color:red; font-weight:bold;'">
+                            </td>
+                            <td th:text="${trade.openTime}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div th:if="${#lists.isEmpty(trades)}" class="box">
+                        <p style="text-align:center;"><strong>Jelenleg nincs nyitott pozíció a számlán.</strong></p>
+                        <div style="text-align:center;">
+                            <a th:href="@{/forex-openpos}" class="button primary small">Új Pozíció Nyitása</a>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <ul class="copyright">
+            <li>&copy; Magyar Fiktív Bank Zrt. Minden jog fenntartva.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+    </footer>
+
+</div>
+
+<script th:src="@{/assets/js/jquery.min.js}"></script>
+<script th:src="@{/assets/js/jquery.dropotron.min.js}"></script>
+<script th:src="@{/assets/js/browser.min.js}"></script>
+<script th:src="@{/assets/js/breakpoints.min.js}"></script>
+<script th:src="@{/assets/js/util.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+
+</body>
+</html>
