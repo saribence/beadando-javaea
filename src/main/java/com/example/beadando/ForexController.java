@@ -146,20 +146,23 @@ public class ForexController {
     }
     @GetMapping("/forex_openpos")
     public String openPositions(Model model) {
+        // 1. Kapcsolódás
         Context ctx = new Context(Config.URL, Config.TOKEN);
-        List<Trade> trades = new ArrayList<>();
 
         try {
-            // Lekérjük az Account ID-hoz tartozó nyitott pozíciókat
-            trades = ctx.trade.listOpen(Config.ACCOUNTID).getTrades();
+            // 2. Nyitott pozíciók lekérése a számláról
+            List<Trade> trades = ctx.trade.listOpen(Config.ACCOUNTID).getTrades();
+
+            // 3. Adatok átadása a te meglévő HTML oldaladnak
+            // FONTOS: A te HTML-edben a th:each="${trades}" vagy hasonló néven várja az adatot!
+            model.addAttribute("trades", trades);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Átadjuk a listát a HTML-nek
-        model.addAttribute("trades", trades);
+        // 4. A te meglévő fájlod neve (kiterjesztés nélkül)
+        return "forex_openpos";
 
-        return "forexOpenpos";
     }
-
 }
