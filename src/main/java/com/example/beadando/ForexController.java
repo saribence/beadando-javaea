@@ -3,6 +3,9 @@ package com.example.beadando;
 import com.oanda.v20.Context;
 import com.oanda.v20.account.AccountSummary;
 import com.oanda.v20.trade.Trade;
+import com.oanda.v20.trade.TradeCloseRequest;
+import com.oanda.v20.trade.TradeCloseResponse;
+import com.oanda.v20.trade.TradeSpecifier;
 import com.oanda.v20.instrument.InstrumentCandlesRequest;
 import com.oanda.v20.instrument.InstrumentCandlesResponse;
 import com.oanda.v20.instrument.CandlestickGranularity;
@@ -12,9 +15,6 @@ import com.oanda.v20.order.OrderCreateResponse;
 import com.oanda.v20.pricing.PricingGetRequest;
 import com.oanda.v20.pricing.PricingGetResponse;
 import com.oanda.v20.primitives.InstrumentName;
-import com.oanda.v20.trade.TradeCloseRequest;
-import com.oanda.v20.trade.TradeSpecifier;
-import com.oanda.v20.trade.TradeCloseResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,7 +72,7 @@ public class ForexController {
         return "forex_actpr";
     }
 
-
+    // --- 3. FELADAT: HISTORIKUS ÁRAK LEKÉRDEZÉSE ---
     @GetMapping("/forex-histpr")
     public String histPriceForm(Model model) {
         model.addAttribute("messageHistPrice", new MessageHistPrice());
@@ -104,6 +104,7 @@ public class ForexController {
     @GetMapping("/forex-openpos")
     public String openPositionForm(Model model) {
         model.addAttribute("messageOpenPosition", new MessageOpenPosition());
+        // JAVÍTVA: "forexOpenpos" helyett "forex_openpos"
         return "forex_openpos";
     }
 
@@ -134,26 +135,26 @@ public class ForexController {
             e.printStackTrace();
             model.addAttribute("error", "Hiba a pozíció nyitásakor: " + e.getMessage());
         }
+        // JAVÍTVA: "forexOpenpos" helyett "forex_openpos"
         return "forex_openpos";
     }
-
 
     // --- 5. FELADAT: NYITOTT POZÍCIÓK LISTÁZÁSA (Forex-Poz) ---
     @GetMapping("/forex-positions")
     public String listOpenPositions(Model model) {
         try {
             Context ctx = new Context(Config.URL, Config.TOKEN);
-
+            // Lekérjük a nyitott pozíciókat
             List<Trade> trades = ctx.trade.listOpen(Config.ACCOUNTID).getTrades();
             model.addAttribute("trades", trades);
-        } catch (Throwable e) { // Exception helyett Throwable, hogy mindent elkapjon
+        } catch (Throwable e) {
             e.printStackTrace();
             model.addAttribute("error", "Hiba a pozíciók lekérésekor: " + e.getMessage());
         }
-
-        // FONTOS: Ennek a névnek PONTOSAN egyeznie kell a HTML fájl nevével (kiterjesztés nélkül)!
+        // JAVÍTVA: Pontosan egyeznie kell a fájlnévvel: forex_positions.html
         return "forex_positions";
     }
+
     // --- 6. FELADAT: POZÍCIÓ ZÁRÁS ---
     @GetMapping("/forex-closepos")
     public String closePositionForm(Model model) {
@@ -165,23 +166,16 @@ public class ForexController {
     public String closePositionSubmit(@ModelAttribute MessageClosePosition messageClosePosition, Model model) {
         try {
             Context ctx = new Context(Config.URL, Config.TOKEN);
-
-
             String tradeIdToClose = messageClosePosition.getTradeId();
-
-
             TradeCloseRequest request = new TradeCloseRequest(Config.ACCOUNTID, new TradeSpecifier(tradeIdToClose));
-
-
             TradeCloseResponse response = ctx.trade.close(request);
-
 
             if (response.getOrderFillTransaction() != null) {
                 model.addAttribute("closedTradeId", response.getOrderFillTransaction().getId());
                 model.addAttribute("closedPrice", response.getOrderFillTransaction().getPrice());
                 model.addAttribute("profit", response.getOrderFillTransaction().getPl());
             } else {
-                model.addAttribute("error", "A pozíciót nem sikerült azonnal lezárni (vagy már le van zárva).");
+                model.addAttribute("error", "A pozíciót nem sikerült azonnal lezárni.");
             }
 
         } catch (Throwable e) {
