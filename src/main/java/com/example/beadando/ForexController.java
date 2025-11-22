@@ -2,6 +2,7 @@ package com.example.beadando;
 
 import com.oanda.v20.Context;
 import com.oanda.v20.account.AccountSummary;
+import com.oanda.v20.trade.Trade;
 import com.oanda.v20.instrument.InstrumentCandlesRequest;
 import com.oanda.v20.instrument.InstrumentCandlesResponse;
 import com.oanda.v20.instrument.CandlestickGranularity;
@@ -143,4 +144,22 @@ public class ForexController {
         }
         return "forex_openpos";
     }
+    @GetMapping("/forex_openpos")
+    public String openPositions(Model model) {
+        Context ctx = new Context(Config.URL, Config.TOKEN);
+        List<Trade> trades = new ArrayList<>();
+
+        try {
+            // Lekérjük az Account ID-hoz tartozó nyitott pozíciókat
+            trades = ctx.trade.listOpen(Config.ACCOUNTID).getTrades();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Átadjuk a listát a HTML-nek
+        model.addAttribute("trades", trades);
+
+        return "forexOpenpos";
+    }
+
 }
